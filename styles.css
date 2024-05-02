@@ -46,6 +46,10 @@ body {
     transform: rotate(-90deg);
 }
 
+#newsCard {
+    height: 400px; /* Set a fixed height for the card */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+}
 
 .nav-link {
     color: #ffffff;
