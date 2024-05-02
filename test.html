@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chartjs@3.9.1/dist/chart.min.js"></script>      
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">
+                    <img src="/images/trending-up.png" alt="Logo">
+                </a>
+            </div>
+            <button class="btn btn-link toggle-sidebar" type="button" data-toggle="collapse" data-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
+                <i class="fas fa-chevron-left arrow-icon"></i>
+            </button>
+            <div class="collapse" id="sidebarCollapse">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Market</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-exchange-alt"></i> Exchange</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-wallet"></i> Wallet</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-blog"></i> Blog & News</a>
+                </li>
+
+    
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img src="/images/user.png" alt="User Avatar">
+                    <span>Ernest Etenyi</span>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fas fa-users"></i> Our Community</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fas fa-envelope"></i> Contact Us</a>
+                    </li>
+                </ul>
+            </div>  
+            </div>
+            
+        </nav>
+        
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card portfolio-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Portfolio value</h5>
+                                        <h2 class="card-text">$0.00</h2>
+                                        <div class="portfolio-summary">
+                                            <span class="profit">Profit: $0.00</span>
+                                            <span class="loss">Loss: $0.00</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5>Select Assets</h5>
+                                        <!-- Adding checkboxes for asset selection -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="asset1" id="asset1">
+                                            <label class="form-check-label" for="asset1">
+                                                Asset1
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="asset2" id="asset2">
+                                            <label class="form-check-label" for="asset2">
+                                                Asset 2
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="asset2" id="asset3">
+                                            <label class="form-check-label" for="asset3">
+                                                Asset 3
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="asset4" id="asset4">
+                                            <label class="form-check-label" for="asset4">
+                                                Asset 4
+                                            </label>
+                                        </div>
+                                        <button id="calculate-portfolio" class="btn btn-primary">Calculate Portfolio</button>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6">
+                                <div class="card performance-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Portfolio Performance</h5>
+                                        <div class="year-filter">
+                                            <label for="yearSelect">Select Year:</label>
+                                            <select id="yearSelect" onchange="updateChart(this.value)">
+                                                <!-- Options will be populated dynamically -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="performance-chart">                                         
+                                            <canvas id="chart"></canvas>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card stock-card">
+                                    <div class="card-header">
+                                        <img src="images/twitch.png" alt="Twitch Logo">
+                                        <h6 class="card-title">Twitch</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-text-1">$345.00 -    "Twitch (AMZN) stock displaying volatility as investors weigh advertising revenue potential.Amazon (Twitch) experiencing a pullback."</h4>
+                                        <div class="stock-chart">
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stock-card">
+                                    <div class="card-header">
+                                        <img src="/images/instagram (1).png" alt="Instagram Logo">
+                                        <h6 class="card-title">Instagram</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-text-2">$184.00 - "Meta stock (Instagram) bounces back, up 3% on optimism about ad revenue growth."</h4>
+                                        <div class="stock-chart">                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stock-card">
+                                    <div class="card-header">
+                                        <img src="/images/linkedin.png" alt="LinkedIn Logo">
+                                        <h6 class="card-title">LinkedIn</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-text-3">$145.00 - LinkedIn stock seesaws as investors assess new monetization features."</h4>
+                                        <div class="stock-chart">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stock-card">
+                                    <div class="card-header">
+                                        <img src="/images/twitter.png" alt="Twitter Logo">
+                                        <h6 class="card-title">Twitter</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-text-4">$484.00- "Twitter stock showing remarkable recovery, up 65% year-to-date after a challenging 2022. Perfect time to buy according to analysts"</h4>
+                                        <div class="stock-chart">                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card dividend-card">
+                            <div class="card-header">
+                                <h5 class="card-title">Dividend</h5>
+                                <a href="#" class="view-all">View all</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="graph-container">
+                                            <canvas id="dividendChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="dividend-text">
+                                            <h4>$500.00</h4>
+                                            <p>Total Dividend Income</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card watchlist-card">
+                            <div class="card-header">
+                                <h5 class="card-title">My Watchlist</h5>
+                                <a href="#" class="view-all">View all</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/facebook.png" alt="Meta Logo">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>MTA</h6>
+                                        <p>$132.40</p>
+                                    </div>
+                                </div>
+                                <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/bitcoin.png" alt="Bitcoin Logo">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>BTC</h6>
+                                        <p>$42.40 <span class="percent-change">+101.6%</span></p>
+                                    </div>
+                                </div>
+                                <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/framer.png" alt="S&P Logo">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>S&P 500</h6>
+                                        <p>$3231.20 <span class="percent-change">+100.7%</span></p>
+                                    </div>
+                                </div>
+                               <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/slack.png" alt=" Dow JonesLogo">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>Dow Jones</h6>
+                                        <p>$5116.17 <span class="percent-change">+75.3%</span></p>
+                                    </div>
+                                </div>
+                                <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/signpost-big.png" alt="AAPL Logo">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>AAPL</h6>
+                                        <p>$173.50 <span class="percent-change">+15.2%</span></p>
+                                    </div>
+                                </div>
+                                <div class="watchlist-item">
+                                    <div class="watchlist-logo">
+                                        <img src="/images/square-dashed-kanban.png" alt="">
+                                    </div>
+                                    <div class="watchlist-info">
+                                        <h6>BRK-B</h6>
+                                        <p>$112.40 <span class="percent-change">+37.7%</span></p>
+                                    </div>
+                                </div>
+             
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+    
+
+    
+</body>
+</html>
