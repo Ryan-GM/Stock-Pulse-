@@ -120,104 +120,86 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // Fetch and display all news articles initially
-        const allNews = await fetchNews('all');
-        displayNews(allNews);
-
-        const marketSelect = document.getElementById('market');
-        marketSelect.addEventListener('change', async (event) => {
-            const market = event.target.value;
-            const allNews = await fetchNews('all'); // Fetch all news again
-            const filteredNews = filterNewsByMarket(allNews, market);
-            displayNews(filteredNews);
-        });
-    } catch (error) {
-        console.error('Error during initial setup:', error);
-    }
-});
-
-// function to fetch news articles 
-async function fetchNews(market) {
-    const apiKey = '951ab660c2f04a8e8a2f5cd410333d22';
-    let url = `https://newsapi.org/v2/everything?q=${market}&apiKey=${apiKey}`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.articles;
-    } catch (error) {
-        console.error('Error fetching news:', error);
-        throw error;
-    }
-}
-
-// Function to filter news articles by market
-function filterNewsByMarket(news, market) {
-    if (market === 'all') {
-        return news; // Return all news articles if market is 'all'
-    }
-
-    // Filter news articles based on the selected market
-    const filteredNews = news.filter(article => {
-        // Check if the article's title or description contains the market keyword
-        return article.title.toLowerCase().includes(market) || article.description.toLowerCase().includes(market);
+//dividends chart
+window.onload = function() {
+    var ctx = document.getElementById('dividendChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Dividend Income',
+                data: [50, 40, 60, 80, 30, 20],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#fff'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#fff'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#fff'
+                    }
+                }
+            }
+        }
     });
-
-    return filteredNews;
-}
-
-// display news articles
-function displayNews(articles) {
-    const displayNewsSection = document.getElementById('displayNews');
-    displayNewsSection.innerHTML = ''; // Clear previous news articles
-
-    articles.forEach(article => {
-        // Create elements to display each news article
-        const articleContainer = document.createElement('div');
-        articleContainer.classList.add('news-article');
-
-        const title = document.createElement('h3');
-        title.textContent = article.title;
-
-        const description = document.createElement('p');
-        description.textContent = article.description;
-
-        // Append elements to the container
-        articleContainer.appendChild(title);
-        articleContainer.appendChild(description);
-
-        // Append the container to the displayNews section
-        displayNewsSection.appendChild(articleContainer);
-    });
-}
-
-// Event listener for market filter change
-document.getElementById('market').addEventListener('change', async function() {
-    const market = this.value;
-    try {
-        const allNews = await fetchAllNews();
-        const filteredNews = filterNewsByMarket(allNews, market);
-        displayNews(filteredNews);
-    } catch (error) {
-        console.error('Error fetching news:', error);
-    }
-});
-
-// Fetch news articles on page load
-document.addEventListener('DOMContentLoaded', async function() {
-    const defaultMarket = 'all'; // Default to fetching all news articles
-    try {
-        const allNews = await fetchAllNews();
-        displayNews(allNews);
-    } catch (error) {
-        console.error('Error fetching news:', error);
-    }
-});
-
-
-
+};
+        fetch('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=XZXJN14OQJFCSEL1.')
+            .then(response => response.json())
+            .then(data => {
+                // Extract the data from the API response
+                const dailyData = data['Time Series (Daily)'];
+        
+                // Create a new Chart.js chart
+                const ctx = document.getElementById('chart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            data: Object.values(dailyData).map(dayData => {
+                                return [
+                                    dayData['1. open'],
+                                    dayData['3. low'],
+                                    dayData['3. low'],
+                                    dayData['2. high'],
+                                    dayData['4. close']
+                                ];
+                            }),
+                            label: 'IBM'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left'
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            });
 //dividends chart
 window.onload = function() {
     var ctx = document.getElementById('dividendChart').getContext('2d');
