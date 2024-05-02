@@ -285,10 +285,10 @@
         fetch('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo')
             .then(response => response.json())
             .then(data => {
-                // Extract the data from the API response
+               
                 const dailyData = data['Time Series (Daily)'];
         
-                // Create a new Chart.js chart
+               
                 const ctx = document.getElementById('chart').getContext('2d');
                 const chart = new Chart(ctx, {
                     type: 'line',
