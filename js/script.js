@@ -107,6 +107,73 @@ function updateChart(selectedYear) {
     });
 }
 
+// function to fetch news articles based on impact level
+async function fetchNews(impactLevel){
+    const apiKey = '951ab660c2f04a8e8a2f5cd410333d22';
+    const topic = 'stocks';
+    let url = `https://newsapi.org/v2/everything?q=${topic}&apiKey=${apiKey}`;
+
+    // Modify the URL based on the selected impact level
+    if(impactLevel !== 'all'){
+        url += `&impact=${impactLevel}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.articles;
+    }catch(error){
+        console.error('Error fetching news:', error);
+        throw error;
+    }
+}
+
+// display news articles
+function displayNews(articles) {
+    const displayNewsSection = document.getElementById('displayNews');
+    displayNewsSection.innerHTML = ''; // Clear previous news articles
+
+    articles.forEach(article => {
+        // Create elements to display each news article
+        const articleContainer = document.createElement('div');
+        articleContainer.classList.add('news-article');
+
+        const title = document.createElement('h3');
+        title.textContent = article.title;
+
+        const description = document.createElement('p');
+        description.textContent = article.description;
+
+        // Append elements to the container
+        articleContainer.appendChild(title);
+        articleContainer.appendChild(description);
+
+        // Append the container to the displayNews section
+        displayNewsSection.appendChild(articleContainer);
+    });
+}
+
+// Event listener for impact filter change
+document.getElementById('impact').addEventListener('change', async function() {
+    const impactLevel = this.value;
+    try{
+        const articles = await fetchNews(impactLevel);
+        displayNews(articles);
+    }catch(error){
+        console.error('Error fetching news:', error);
+    }
+});
+
+// Fetch news articles on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    const defaultImpactLevel = 'all'; // Default to fetching all news articles
+    try {
+        const articles = await fetchNews(defaultImpactLevel);
+        displayNews(articles);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
