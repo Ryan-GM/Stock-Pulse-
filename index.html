@@ -128,18 +128,24 @@
                             </div>
                         </div>
                         <section id="filter">
-                            <label for="impact">Select Impact:</label>
-                            <select id="impact">
+                            <label for="impact">Select Market:</label>
+                            <select id="market">
                                 <option value="all">All</option>
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
+                                <option value="stocks">Stocks</option>
+                                <option value="crypto">Crypto</option>
+                                <option value="commodities">Commodities</option>
+                                <option value="currencies">Currencies</option>
                             </select>
                         </section>
-                        <section id="displayNews">
-                            <!-- News articles will be displayed here -->
+                        <section id="newsCard">
+                            <div class="card-header">
+                                <h5 class="card-title">News</h5>
+                            </div>
+                            <div class="card-body" id="displayNews">
+                                <!-- News articles will be displayed here -->
+                            </div>
                         </section>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-3">
                                 <div class="card stock-card">
                                     <div class="card-header">
@@ -193,7 +199,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <div class="col-md-4">
