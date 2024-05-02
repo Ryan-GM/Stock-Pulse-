@@ -39,6 +39,12 @@ body {
     height: auto;
 }
 
+.arrow-icon {
+    transition: transform 0.3s ease;
+}
+.collapsed .arrow-icon {
+    transform: rotate(-90deg);
+}
 
 
 .nav-link {
