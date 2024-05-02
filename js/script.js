@@ -8,10 +8,6 @@ async function fetchPortfolioPerformance() {
         throw error; // Re-throw the error to be caught by the caller
     }
 }
-// function to extract years from dat string
-function extractYears(dates){
-    return dates.map(date => new Date(date).getFullYear());
-}
 
 // Function to update the dropdown with available years
 function populateYearSelect(years) {
@@ -30,13 +26,13 @@ function populateYearSelect(years) {
 function updateChart(selectedYear) {
     // Fetch portfolio performance data for the selected year
     fetchPortfolioPerformance()
-        .then(data => {
-            // Use the data to update the chart
-            console.log(`Update chart with data for year: ${selectedYear}`);
-        });
+    .then(data => {
+        // Use the data to update the chart
+        console.log(`Update chart with data for year: ${selectedYear}`);
+    });
 }
 
-// Initial setup
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Fetch portfolio performance data and populate the dropdown on page load
@@ -44,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         populateYearSelect(Object.keys(data['Time Series (Daily)'])); // Populate the dropdown with available years
         // Update the chart with data for the first year by default
         const firstYear = Object.keys(data['Time Series (Daily)'])[0];
-        updateChart(firstYear, data);
+        updateChart(firstYear);
     } catch (error) {
         console.error('Error during initial setup:', error);
     }
