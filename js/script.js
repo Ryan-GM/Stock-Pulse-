@@ -8,6 +8,10 @@ async function fetchPortfolioPerformance() {
         throw error; // Re-throw the error to be caught by the caller
     }
 }
+// function to extract years from dat string
+function extractYears(dates){
+    return dates.map(date => new Date(date).getFullYear());
+}
 
 // Function to update the dropdown with available years
 function populateYearSelect(years) {
