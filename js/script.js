@@ -107,25 +107,65 @@ function updateChart(selectedYear) {
     });
 }
 
-// function to fetch news articles based on impact level
-async function fetchNews(impactLevel){
-    const apiKey = '951ab660c2f04a8e8a2f5cd410333d22';
-    const topic = 'stocks';
-    let url = `https://newsapi.org/v2/everything?q=${topic}&apiKey=${apiKey}`;
-
-    // Modify the URL based on the selected impact level
-    if(impactLevel !== 'all'){
-        url += `&impact=${impactLevel}`;
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Fetch portfolio performance data and populate the dropdown on page load
+        const data = await fetchPortfolioPerformance();
+        populateYearSelect(Object.keys(data['Time Series (Daily)'])); // Populate the dropdown with available years
+        // Update the chart with data for the first year by default
+        const firstYear = Object.keys(data['Time Series (Daily)'])[0];
+        updateChart(firstYear);
+    } catch (error) {
+        console.error('Error during initial setup:', error);
     }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Fetch and display all news articles initially
+        const allNews = await fetchNews('all');
+        displayNews(allNews);
+
+        const marketSelect = document.getElementById('market');
+        marketSelect.addEventListener('change', async (event) => {
+            const market = event.target.value;
+            const allNews = await fetchNews('all'); // Fetch all news again
+            const filteredNews = filterNewsByMarket(allNews, market);
+            displayNews(filteredNews);
+        });
+    } catch (error) {
+        console.error('Error during initial setup:', error);
+    }
+});
+
+// function to fetch news articles 
+async function fetchNews(market) {
+    const apiKey = '951ab660c2f04a8e8a2f5cd410333d22';
+    let url = `https://newsapi.org/v2/everything?q=${market}&apiKey=${apiKey}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
         return data.articles;
-    }catch(error){
+    } catch (error) {
         console.error('Error fetching news:', error);
         throw error;
     }
+}
+
+// Function to filter news articles by market
+function filterNewsByMarket(news, market) {
+    if (market === 'all') {
+        return news; // Return all news articles if market is 'all'
+    }
+
+    // Filter news articles based on the selected market
+    const filteredNews = news.filter(article => {
+        // Check if the article's title or description contains the market keyword
+        return article.title.toLowerCase().includes(market) || article.description.toLowerCase().includes(market);
+    });
+
+    return filteredNews;
 }
 
 // display news articles
@@ -153,38 +193,28 @@ function displayNews(articles) {
     });
 }
 
-// Event listener for impact filter change
-document.getElementById('impact').addEventListener('change', async function() {
-    const impactLevel = this.value;
-    try{
-        const articles = await fetchNews(impactLevel);
-        displayNews(articles);
-    }catch(error){
+// Event listener for market filter change
+document.getElementById('market').addEventListener('change', async function() {
+    const market = this.value;
+    try {
+        const allNews = await fetchAllNews();
+        const filteredNews = filterNewsByMarket(allNews, market);
+        displayNews(filteredNews);
+    } catch (error) {
         console.error('Error fetching news:', error);
     }
 });
 
 // Fetch news articles on page load
 document.addEventListener('DOMContentLoaded', async function() {
-    const defaultImpactLevel = 'all'; // Default to fetching all news articles
+    const defaultMarket = 'all'; // Default to fetching all news articles
     try {
-        const articles = await fetchNews(defaultImpactLevel);
-        displayNews(articles);
+        const allNews = await fetchAllNews();
+        displayNews(allNews);
     } catch (error) {
         console.error('Error fetching news:', error);
     }
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // Fetch portfolio performance data and populate the dropdown on page load
-        const data = await fetchPortfolioPerformance();
-        populateYearSelect(Object.keys(data['Time Series (Daily)'])); // Populate the dropdown with available years
-        // Update the chart with data for the first year by default
-        const firstYear = Object.keys(data['Time Series (Daily)'])[0];
-        updateChart(firstYear);
-    } catch (error) {
-        console.error('Error during initial setup:', error);
-    }
-});
+
 
