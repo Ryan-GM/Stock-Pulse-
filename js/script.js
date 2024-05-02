@@ -216,5 +216,84 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-
+//dividends chart
+window.onload = function() {
+    var ctx = document.getElementById('dividendChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Dividend Income',
+                data: [50, 40, 60, 80, 30, 20],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#fff'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#fff'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#fff'
+                    }
+                }
+            }
+        }
+    });
+};
+        fetch('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=XZXJN14OQJFCSEL1.')
+            .then(response => response.json())
+            .then(data => {
+                // Extract the data from the API response
+                const dailyData = data['Time Series (Daily)'];
+        
+                // Create a new Chart.js chart
+                const ctx = document.getElementById('chart').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            data: Object.values(dailyData).map(dayData => {
+                                return [
+                                    dayData['1. open'],
+                                    dayData['3. low'],
+                                    dayData['3. low'],
+                                    dayData['2. high'],
+                                    dayData['4. close']
+                                ];
+                            }),
+                            label: 'IBM'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left'
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            });
 
